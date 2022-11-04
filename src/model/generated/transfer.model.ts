@@ -1,40 +1,46 @@
-import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, Index as Index_, ManyToOne as ManyToOne_} from "typeorm"
-import * as marshal from "./marshal"
-import {Account} from "./account.model"
+import {
+    Entity as Entity_,
+    Property as Column_,
+    PrimaryKey as PrimaryColumn_,
+    OneToMany as OneToMany_,
+    Index as Index_,
+    ManyToOne as ManyToOne_,
+} from '@mikro-orm/core'
+import {Account} from './account.model'
 
 @Entity_()
 export class Transfer {
-  constructor(props?: Partial<Transfer>) {
-    Object.assign(this, props)
-  }
+    constructor(props?: Partial<Transfer>) {
+        Object.assign(this, props)
+    }
 
-  @PrimaryColumn_()
-  id!: string
+    @PrimaryColumn_()
+    id!: string
 
-  @Index_()
-  @Column_("int4", {nullable: false})
-  blockNumber!: number
+    @Index_()
+    @Column_({nullable: false, type: 'int4'})
+    blockNumber!: number
 
-  @Index_()
-  @Column_("timestamp with time zone", {nullable: false})
-  timestamp!: Date
+    @Index_()
+    @Column_({nullable: false, type: 'timestamp with time zone'})
+    timestamp!: Date
 
-  @Index_()
-  @Column_("text", {nullable: true})
-  extrinsicHash!: string | undefined | null
+    @Index_()
+    @Column_({nullable: true, type: 'string'})
+    extrinsicHash!: string | undefined | null
 
-  @Index_()
-  @ManyToOne_(() => Account, {nullable: true})
-  from!: Account
+    @Index_()
+    @ManyToOne_(() => Account, {nullable: true, mapToPk: true})
+    from!: string
 
-  @Index_()
-  @ManyToOne_(() => Account, {nullable: true})
-  to!: Account
+    @Index_()
+    @ManyToOne_(() => Account, {nullable: true, mapToPk: true})
+    to!: string
 
-  @Index_()
-  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
-  amount!: bigint
+    @Index_()
+    @Column_({nullable: false, type: 'numeric'})
+    amount!: bigint
 
-  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
-  fee!: bigint
+    @Column_({nullable: false, type: 'numeric'})
+    fee!: bigint
 }
