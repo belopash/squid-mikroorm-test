@@ -127,6 +127,8 @@ export class MikroormDatabase extends BaseDatabase<Store> {
 
         try {
             await cb(store)
+            await store.flush()
+            store.clear()
         } catch (e: any) {
             open = false
             await tx.rollback().catch((err) => null)
